@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 import ollama
+import textwrap
 import streamlit as st
 from mcp import Client, StdioServerParameters
 
@@ -148,21 +149,18 @@ st.markdown(
 # ============================================================
 
 st.markdown(
-    """
-    <div class="hero">
-
-        <div class="hero-title">
-            🤖 Autonomous Coding Agent
+    textwrap.dedent("""
+        <div class="hero">
+            <div class="hero-title">
+                🤖 Autonomous Coding Agent
+            </div>
+            <div class="hero-subtitle">
+                AI-powered software development using
+                <b>Ollama</b> • <b>Qwen</b> • <b>Ops Crew</b> • <b>MCP</b>
+            </div>
         </div>
-
-        <div class="hero-subtitle">
-            AI-powered software development using
-            <b>Ollama</b> • <b>Qwen</b> • <b>Ops Crew</b> • <b>MCP</b>
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
+    """),
+    unsafe_allow_html=True,
 )
 
 
