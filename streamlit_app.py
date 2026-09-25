@@ -2,8 +2,9 @@ import asyncio
 import subprocess
 import sys
 
-import ollama
+import os
 import streamlit as st
+from groq import Groq
 from mcp import Client, StdioServerParameters
 
 
@@ -11,7 +12,7 @@ from mcp import Client, StdioServerParameters
 # CONFIG
 # ============================================================
 
-MODEL = "qwen2.5-coder:1.5b"
+MODEL = "openai/gpt-oss-20b"
 
 
 # ============================================================
@@ -157,7 +158,7 @@ st.markdown(
 
         <div class="hero-subtitle">
             AI-powered software development using
-            <b>Ollama</b> • <b>Qwen</b> • <b>Ops Crew</b> • <b>MCP</b>
+            <b>Groq</b> • <b>AI Agents</b> • <b>Ops Crew</b> • <b>MCP</b>
         </div>
 
     </div>
@@ -194,7 +195,7 @@ with st.sidebar:
 
     st.caption(
         "Autonomous Coding Agent\n"
-        "Built with Python + Streamlit + Ollama + MCP"
+        "Built with Python + Streamlit + Groq + MCP"
     )
 
 
@@ -223,9 +224,26 @@ program_input = st.text_area(
 # AGENT FUNCTION
 # ============================================================
 
+def get_groq_api_key():
+    try:
+        key = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        key = None
+
+    return key or os.getenv("GROQ_API_KEY")
+
+
 def run_agent(role, task_text):
 
-    response = ollama.chat(
+    api_key = get_groq_api_key()
+
+    if not api_key:
+        st.error("GROQ_API_KEY is not configured.")
+        st.stop()
+
+    client = Groq(api_key=api_key)
+
+    response = client.chat.completions.create(
         model=MODEL,
         messages=[
             {
@@ -239,7 +257,7 @@ def run_agent(role, task_text):
         ]
     )
 
-    return response["message"]["content"]
+    return response.choices[0].message.content
 
 
 # ============================================================
@@ -579,5 +597,5 @@ st.divider()
 
 st.caption(
     "🤖 Autonomous Coding Agent • "
-    "Ollama + Qwen + Ops Crew + Model Context Protocol"
+    "Groq + AI Agents + Ops Crew + Model Context Protocol"
 )
