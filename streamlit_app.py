@@ -221,6 +221,36 @@ program_input = st.text_area(
 
 
 # ============================================================
+# DATASET UPLOAD
+# ============================================================
+
+st.markdown("## 📁 Upload Dataset")
+
+uploaded_file = st.file_uploader(
+    "Upload a CSV file for the coding agent to analyze",
+    type=["csv"]
+)
+
+if uploaded_file is not None:
+    import os
+
+    os.makedirs("projects", exist_ok=True)
+
+    dataset_path = "projects/uploaded_dataset.csv"
+
+    with open(dataset_path, "wb") as file:
+        file.write(uploaded_file.getbuffer())
+
+    st.success(
+        f"✅ Dataset uploaded: {uploaded_file.name}"
+    )
+
+    st.caption(
+        "The agent will use this dataset during code generation and execution."
+    )
+
+
+# ============================================================
 # AGENT FUNCTION
 # ============================================================
 
@@ -360,6 +390,11 @@ Task:
 
 Plan:
 {plan}
+
+Dataset:
+A CSV dataset is available at projects/uploaded_dataset.csv.
+If a dataset is uploaded, use that file for the analysis.
+Use pandas for data analysis and matplotlib for visualizations when appropriate.
 """
             )
 
